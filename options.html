@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Asterisk Click2Call Options</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <style>
+        .glyphicon {
+            color: #2e6da4;
+        }
+        fieldset {
+            margin: 8px;
+            border: 1px solid silver;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        legend {
+            font-size: 12;
+            padding: 2px;
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" style="margin-top:20px">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3>Asterisk Click2Call Options</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-vertical">
+                            <!-- Hard-coded ARI; removed options for AMI and AJAM -->
+                            <input type="hidden" name="interface" value="ari">
+
+                            <div class="form-group col-md-4">
+                                <label for="exten">Extension:</label>
+                                <input class="form-control" name="exten" id="exten" placeholder="000"></input>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="replchar">Replace characters:</label>
+                                <span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-content="Use this setting to replace special characters in phone numbers. Syntax: a|b (replace all occurrences of a with b)."></span>
+                                <input class="form-control" name="replchar" id="replchar" placeholder="\+7|8"></input>
+                            </div>
+
+                            <div class="form-group col-md-8" id="ip-group">
+                                <label for="ip">ARI URL:</label>
+                                <input class="form-control" name="ip" id="ip" value="http://192.168.16.155:8088"></input>
+                            </div>
+                            <div class="form-group col-md-4" id="context-group">
+                                <label for="context">Context:</label>
+                                <input class="form-control" name="context" id="context" value="all"></input>
+                            </div>
+
+                            <div class="form-group col-md-6" id="username-group">
+                                <label for="username">Username:</label>
+                                <input class="form-control" id="username" name="username" value="bitree"></input>
+                            </div>
+                            <div class="form-group col-md-6" id="secret-group">
+                                <label for="secret">Password:</label>
+                                <input class="form-control" type="password" id="secret" name="secret" value="Etonmess16!"></input>
+                            </div>
+
+                            <div id="status" class="small" style="color:red;margin-top:10px;"></div>
+
+                            <div class="col-md-12" style="margin-top:10px;">
+                                <button id="save" class="btn btn-primary btn-block">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer">2025 - Manifest v3. Ver. <span id="version"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="jquery-2.0.3.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <scri

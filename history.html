@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calls History</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="libs/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="libs/DataTables/datatables.min.css">
+</head>
+<body>
+  <div class="container" style="margin-top: 10px;">
+    <h4 class="text-center">Call History</h4>
+    <table class="table compact nowrap table-sm table-hover" id="history">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Time</th>
+          <th>Phone</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div class="text-center" style="margin-top: 20px;">
+      <button class="btn btn-danger btn-sm" id="clearhistory">Clear History</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="libs/jquery-2.0.3.min.js"></script>
+  <script src="libs/DataTables/datatables.min.js"></script>
+  <script src="libs/moment.min.js"></script>
+  <script src="libs/datetime-moment.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

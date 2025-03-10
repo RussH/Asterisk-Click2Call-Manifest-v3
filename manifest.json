@@ -1,0 +1,59 @@
+{
+  "name": "Asterisk Click2Call",
+  "version": "1.0.0",
+  "author": "Bitree",
+  "manifest_version": 3,
+  "default_locale": "en",
+  "description": "Calls a phone number highlighted on a web page using Asterisk PBX.",
+  "icons": {
+    "16": "phone16.png",
+    "48": "phone48.png",
+    "128": "phone128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+},
+  "permissions": ["contextMenus", "notifications", "storage", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_icon": {
+      "16": "phone16.png",
+      "48": "phone48.png"
+    },
+    "default_title": "Asterisk Click2Call: clickable links ON"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["highlight.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "phone16.png",
+        "phone16_disabled.png",
+        "phone48.png",
+        "phone128.png",
+        "styles.css",
+        "libs/bootstrap.min.css",
+        "libs/DataTables/datatables.min.css",
+        "libs/jquery-2.0.3.min.js",
+        "libs/moment.min.js",
+        "libs/datetime-moment.js",
+        "libs/DataTables/datatables.min.js",
+        "history.html",
+        "history.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
