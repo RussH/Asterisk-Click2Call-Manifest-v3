@@ -1,6 +1,6 @@
 # Asterisk Click2Call (Manifest V3)
 
-This is a Manifest V3 version of a basic Asterisk Click2Call extension. It’s based on the basic sections of the Bitree Click2Call extension which demonstrated how to build a proper URL for Asterisk using AMI (Asterisk v12 or higher). No tracking embedded in this one!
+This is a Manifest V3 version of a basic Asterisk Click2Call extension. It’s based on the basic sections of the Bitree Click2Call extension which demonstrated how to build a proper URL for Asterisk using AMI (Asterisk v12 or higher). This extension does not track or record any user behaviour whatsoever.
 
 ## Overview
 
