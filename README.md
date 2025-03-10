@@ -68,7 +68,7 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
    - For development, open Chrome and navigate to `chrome://extensions/`.
    - Enable "Developer mode" by toggling the switch in the top-right corner.
    - Click on "Load unpacked" and select your extension’s folder.
-   - Alternatively, you can package the extension and submit it to the Chrome Web Store.
+   - Alternatively, you can wait until it's packaged and submitted the Chrome Web Store.
 
 3. **Configure the Extension Options**  
    - Open the extension’s options page (usually accessible via the extension icon or through `chrome://extensions/`).
