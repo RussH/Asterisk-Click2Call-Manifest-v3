@@ -11,7 +11,7 @@ This extension allows you to click on a highlighted phone number on a webpage an
 The extension builds the following URL format to initiate a call:
 
 ```bash
-curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&extension=01234567890&callerId=01234567890&timeout=15&context=all&api_key=click2call:click2call_secret"
+curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&extension=01234567890&callerId=01234567890&timeout=15&context=all&api_key=clicktocall:clicktocall_secret"
 ```
 ## URL Parameters Explained
 
@@ -26,7 +26,7 @@ curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&ext
 - **context:**  
   The dialplan context (e.g., `all`).
 - **api_key:**  
-  The manager username and secret combined (e.g., `click2call:click2call_secret`).
+  The manager username and secret combined (e.g., `clicktocall:clicktocall_secret`).
 
 ## Asterisk Configuration
 
