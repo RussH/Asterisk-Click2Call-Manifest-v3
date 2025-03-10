@@ -1,6 +1,6 @@
 # Asterisk Click2Call (Manifest V3)
 
-This is a Manifest V3 version of a basic Asterisk Click2Call extension. It’s based on the free sections of the Bitree Click2Call extension and demonstrates how to build a proper URL for Asterisk using AMI (Asterisk v12 or higher).
+This is a Manifest V3 version of a basic Asterisk Click2Call extension. It’s based on the basic sections of the Bitree Click2Call extension which demonstrated how to build a proper URL for Asterisk using AMI (Asterisk v12 or higher). No tracking embedded in this one!
 
 ## Overview
 
@@ -12,6 +12,7 @@ The extension builds the following URL format to initiate a call:
 
 ```bash
 curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&extension=01234567890&callerId=01234567890&timeout=15&context=all&api_key=click2call:click2call_secret"
+```
 ## URL Parameters Explained
 
 - **endpoint:** `Local/999@all`  
@@ -38,22 +39,25 @@ For this extension to work, update your Asterisk configuration as follows:
    Add the following entry to your `/etc/asterisk/manager.conf`:
 
    ```ini
-   [click2call]
-   secret=click2call_secret
+   [clicktocall]
+   secret=clicktocall_secret
    writetimeout=100
    read=system,call,log,verbose,command,agent,user,config,originate
    write=system,call,log,verbose,command,agent,user,config,originate
+   
+   ```
 
    ### 3. Enable Mini HTTP Server
 
 Enable the mini HTTP server in Asterisk by updating your `http.conf` with the following settings:
 
-```
-[general]
-enabled=yes
-bindaddr=192.168.0.1
-bindport=8088
-uploads=/var/lib/asterisk/uploads/blah/
+```ini
+ [general]
+ enabled=yes
+ bindaddr=192.168.0.1
+ bindport=8088
+ uploads=/var/lib/asterisk/uploads/blah/
+  ```
 
 ## Installation
 
