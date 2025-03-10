@@ -1,7 +1,7 @@
 {
   "name": "Asterisk Click2Call",
   "version": "1.0.0",
-  "author": "Bitree",
+  "author": "RussH",
   "manifest_version": 3,
   "default_locale": "en",
   "description": "Calls a phone number highlighted on a web page using Asterisk PBX.",
@@ -12,6 +12,7 @@
   },
   "background": {
     "service_worker": "background.js"
+
 },
   "permissions": ["contextMenus", "notifications", "storage", "scripting"],
   "host_permissions": ["http://*/*", "https://*/*"],
