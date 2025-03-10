@@ -7,7 +7,7 @@ function openOptionsPage() {
 }
 
 function init() {
-  console.log("Initializing Click2Call extension.");
+  console.log("Initializing Click to Call extension.");
 
   // Load settings from chrome.storage including username, secret, and exten.
   chrome.storage.sync.get(
@@ -126,7 +126,7 @@ function httpSend(method, url, message) {
       console.log("Call initiated successfully.");
       chrome.notifications.create({
         type: "basic",
-        title: "Asterisk Click2Call",
+        title: "Asterisk Click to Call",
         message: message,
         iconUrl: "phone48.png",
       });
