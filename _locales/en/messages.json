@@ -1,11 +1,6 @@
 {
-   "contextMenuCall": {
-      "message":  "Call",
-      "description": ""
-   },
-   "highlightToggle": {
-      "message":  "Highlight phone numbers toggle",
-      "description": ""
-   }
-
+  "contextMenuCall": {
+    "message": "Call",
+    "description": ""
+  }
 }
