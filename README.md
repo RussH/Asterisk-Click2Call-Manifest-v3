@@ -56,7 +56,7 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
  enabled=yes
  bindaddr=192.168.0.1
  bindport=8088
- uploads=/var/lib/asterisk/uploads/blah/
+ ;uploads=/var/lib/asterisk/uploads/blah/
   ```
 
 ## Installation
