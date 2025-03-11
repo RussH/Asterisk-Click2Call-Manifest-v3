@@ -35,7 +35,6 @@ function save_options() {
     ip: $("#ip").val(),
     username: $("#username").val(),
     secret: $("#secret").val(),
-    replchar: $("#replchar").val(),
     context: $("#context").val()
   };
 
@@ -48,7 +47,7 @@ function save_options() {
 
 function restore_options() {
   chrome.storage.sync.get(
-    ["interface", "exten", "amiscript", "ip", "username", "secret", "replchar", "context"],
+    ["interface", "exten", "amiscript", "ip", "username", "secret", "context"],
     (settings) => {
       $("input[value=ami]").prop("checked", true);
 
@@ -60,7 +59,6 @@ function restore_options() {
       $("#ip").val(settings.ip || "");
       $("#username").val(settings.username || "");
       $("#secret").val(settings.secret || "");
-      $("#replchar").val(settings.replchar || "");
       $("#context").val(settings.context || "from-internal");
       console.log("Options restored:", settings);
     }
