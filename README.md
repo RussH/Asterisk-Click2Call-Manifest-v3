@@ -8,7 +8,7 @@ This extension allows you to click on a highlighted phone number on a webpage an
 
 ## Click2Call Callback URL Format
 
-The extension builds the following URL format to initiate a call:
+The extension builds the following URL format to initiate a call, you can prove it's working by using curl:
 
 ```bash
 curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&extension=01234567890&callerId=01234567890&timeout=15&context=all&api_key=clicktocall:clicktocall_secret"
