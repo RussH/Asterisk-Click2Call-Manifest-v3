@@ -16,7 +16,7 @@ function init() {
       opt.context = settings.context || "default"; // Default context if not set
       opt.replchar = settings.replchar || "";
       opt.interface = settings.interface || "ari"; // Default to ARI
-      opt.ip = settings.ip || "http://192.168.16.155:8088"; // Default ARI URL
+      opt.ip = settings.ip || "http://192.168.1.100:8088"; // Default ARI URL
       opt.username = settings.username || "";
       opt.secret = settings.secret || "";
       opt.exten = settings.exten || "";
@@ -69,10 +69,10 @@ function placeCall(phoneNumber) {
       opt.context   = settings.context || "default";
       opt.replchar  = settings.replchar || "";
       opt.interface = settings.interface || "ari";
-      opt.ip        = settings.ip || "http://192.168.16.155:8088";
+      opt.ip        = settings.ip || "http://192.168.1.100:8088";
       opt.username  = settings.username || "";
       opt.secret    = settings.secret || "";
-      opt.exten       = settings.exten || ""; // This should now be "666"
+      opt.exten       = settings.exten || "";
 
       // Check if all required settings are present.
       if (!opt.exten || !opt.ip || !opt.context || !opt.username || !opt.secret) {

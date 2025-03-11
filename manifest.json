@@ -13,8 +13,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["contextMenus", "notifications", "storage", "scripting"],
-  "host_permissions": ["http://*/*", "https://*/*"],
+  "permissions": ["activeTab", "contextMenus", "notifications", "storage", "scripting"],
   "action": {
     "default_icon": {
       "16": "phone16.png",
@@ -22,18 +21,10 @@
     },
     "default_title": "Asterisk Click to Call"
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["highlight.js"],
-      "run_at": "document_end"
-    }
-  ],
   "web_accessible_resources": [
     {
       "resources": [
         "phone16.png",
-        "phone16_disabled.png",
         "phone48.png",
         "phone128.png",
         "libs/bootstrap.min.css",
