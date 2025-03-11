@@ -1,14 +1,14 @@
-# Asterisk Click2Call (Manifest V3)
+# Asterisk Click To Call (Manifest V3)
 
-This is a Manifest V3 version of a basic Asterisk Click2Call extension. I looked at the defunct Bitree Click2Call extension to see how to build a proper URL. Unlike that one, this extension does not track or record any user behaviour whatsoever. For Asterisk using AMI only (Asterisk v12 or higher).
+This is a Manifest V3 version of a basic Asterisk Click To Call extension. I looked at the defunct Bitree Click2Call extension to see how to build a proper URL. Unlike that one, this extension does not track or record any user behaviour whatsoever. This extension is for Asterisk using AMI only (Asterisk v12 or higher).
 
 ## Overview
 
-This extension allows you to click on a highlighted phone number on a webpage and have Asterisk place a call via a callback mechanism. The extension constructs a URL based on settings saved in Chrome Storage, and the URL follows the format required by Asterisk’s ARI interface.
+This extension allows you to right-click on a highlighted phone number on a webpage and via the context menu have Asterisk place a call via a callback mechanism. The extension constructs a URL based on settings saved in Chrome Storage, and the URL follows the format required by Asterisk’s ARI interface.
 
 ## Click2Call Callback URL Format
 
-The extension builds the following URL format to initiate a call, you can prove it's working by using curl:
+The extension builds the following URL format to initiate a call, you can prove it's working without the extension by using curl to replicate the callback request:
 
 ```bash
 curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&extension=01234567890&callerId=01234567890&timeout=15&context=all&api_key=clicktocall:clicktocall_secret"
@@ -46,6 +46,7 @@ For this extension to work, update your Asterisk configuration as follows:
    write=system,call,log,verbose,command,agent,user,config,originate
    
    ```
+This username and secret will be what you configure in the chrome extension.
 
    ### 3. Enable Mini HTTP Server
 
