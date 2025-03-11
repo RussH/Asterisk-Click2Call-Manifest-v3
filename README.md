@@ -6,6 +6,8 @@ This is a Manifest V3 version of a basic Asterisk Click To Call extension. I loo
 
 This extension allows you to right-click on a highlighted phone number on a webpage and via the context menu have Asterisk place a call via a callback mechanism. The extension constructs a URL based on settings saved in Chrome Storage, and the URL follows the format required by Asterisk’s ARI interface.
 
+![Context Menu](images/context-menu.png)
+
 ## Click2Call Callback URL Format
 
 The extension builds the following URL format to initiate a call, you can prove it's working without the extension by using curl to replicate the callback request:
@@ -47,6 +49,8 @@ For this extension to work, update your Asterisk configuration as follows:
    
    ```
 This username and secret will be what you configure in the chrome extension.
+
+![Extension Configuration](images/options.png)
 
    ### 3. Enable Mini HTTP Server
 
