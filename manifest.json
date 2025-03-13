@@ -4,7 +4,7 @@
   "author": "RussH",
   "manifest_version": 3,
   "default_locale": "en",
-  "description": "Calls a phone number highlighted on a web page using Asterisk PBX.",
+  "description": "Click to call  – calls any phone number you've highlighted directly from your browser using Asterisk.",
   "icons": {
     "16": "phone16.png",
     "48": "phone48.png",
