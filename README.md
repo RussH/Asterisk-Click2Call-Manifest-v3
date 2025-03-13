@@ -87,11 +87,11 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
    - Verify that the call is placed as expected.
   
    
-#### Debugging with the browser Console
+### Debugging with the browser Console
 
 If you need to debug the extension, use the browser console. 
 
-### Checking Saved Credentials
+#### Checking Saved Credentials
 
 you can check these are entered correctly :
 
