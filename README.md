@@ -86,4 +86,40 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
    - Visit any webpage, highlight a phone number, right-click, and choose the context menu option to initiate a call.
    - Verify that the call is placed as expected.
 
+## Debugging with the 'Google Chrome' Console
+
+If you need to debug the extension, use the browser console. 
+
+### Checking Saved Credentials
+
+you can check these are entered correctly :
+
+1. **Open Developer Tools**: Press F12 or right-click on the page and select **Inspect**.
+2. **Navigate to the Console**: Go to the **Console** tab.
+
+Then, run the following command in the Console:
+
+```javascript
+chrome.storage.sync.get(["username", "secret", "ip", "exten"], function(result) {
+  console.log("Saved credentials:", result);
+});
+```
+
+## Check the Extension Error Log
+
+1. **Open the Extensions Page**:  
+   Navigate to the extensions page in your Chrome/Chromium/Brave/Edge/etc browser.
+
+2. **Enable Developer Mode**:  
+   In the top-right corner of the Extensions page, toggle the **Developer mode** switch on.
+
+3. **Select the Extension**:  
+   Find the extension in the list of installed extensions.
+
+4. **View the Error Log**:  
+   - An **Errors** button or link will show — click it to view the error details.  
+
+
+
+
 
