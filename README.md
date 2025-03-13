@@ -78,7 +78,7 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
    - Alternatively, you can [get it on the Chrome Web Store](https://chromewebstore.google.com/detail/asterisk-click-to-call/pioibldicnmheenkadiijicefnalndli)
 
 3. **Configure the Extension Options**  
-   - Open the extension’s options page (usually accessible via the extension icon or through `chrome://extensions/`).
+   - Open the extension’s options page.
    - Enter your Asterisk settings (IP, extension, username, secret, context, etc.) as required.
    - Click "Save" to store your configuration.
 
