@@ -85,8 +85,9 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
 4. **Test the Extension**  
    - Visit any webpage, highlight a phone number, right-click, and choose the context menu option to initiate a call.
    - Verify that the call is placed as expected.
-
-# Debugging with the browser Console
+  
+   
+#### Debugging with the browser Console
 
 If you need to debug the extension, use the browser console. 
 
@@ -105,7 +106,7 @@ chrome.storage.sync.get(["username", "secret", "ip", "exten"], function(result) 
 });
 ```
 
-# Check the Extension Error Log
+#### Check the Extension Error Log
 
 1. **Open the Extensions Page**:  
    Navigate to the extensions page in your Chrome/Chromium/Brave/Edge/etc browser.
