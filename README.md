@@ -87,7 +87,7 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
    - Verify that the call is placed as expected.
   
    
-### Debugging with the browser Console
+## Debugging
 
 If you need to debug the extension, use the browser console. 
 
