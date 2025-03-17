@@ -1,6 +1,6 @@
 {
   "name": "Asterisk Click to Call",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "RussH",
   "manifest_version": 3,
   "default_locale": "en",
