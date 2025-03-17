@@ -19,6 +19,11 @@
       padding: 2px;
       margin-bottom: 0px;
     }
+    .warning-text {
+      color: red;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -41,8 +46,15 @@
 
               <div class="form-group col-md-8" id="ip-group">
                 <label for="ip">ARI URL:</label>
-                <input type="text" class="form-control" name="ip" id="ip" />
+                <input type="text" class="form-control" name="ip" id="ip" value="https://127.0.0.1:8088" />
+                <small id="ip-warning" class="warning-text">
+                  ⚠ Warning: Using HTTP is insecure! Sensitive data may be exposed.
+                  <br>
+                  <input type="checkbox" id="allow-http">
+                  <label for="allow-http">I understand the risks and still want to proceed.</label>
+                </small>
               </div>
+
               <div class="form-group col-md-4" id="context-group">
                 <label for="context">Context:</label>
                 <input type="text" class="form-control" name="context" id="context" value="all" />
@@ -60,7 +72,7 @@
               <div id="status" class="small" style="color:red;margin-top:10px;"></div>
 
               <div class="col-md-12" style="margin-top:10px;">
-                <button id="save" type="button" class="btn btn-primary btn-block">Save</button>
+                <button id="save" type="button" class="btn btn-primary btn-block" disabled>Save</button>
               </div>
             </form>
           </div>
