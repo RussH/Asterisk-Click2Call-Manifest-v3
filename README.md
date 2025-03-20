@@ -2,6 +2,8 @@
 
 This is a Manifest V3 version of a basic Asterisk Click To Call extension. I looked at the defunct Bitree Click2Call extension to see how to build a proper URL. Unlike that one, this extension does not track or record any user behaviour. This extension is for Asterisk using AMI only (Asterisk v12 or higher).
 
+This extension would generally be used if you are working in an office that already uses an Asterisk PBX and you want to improve your workflow to quickly dial out from your browser. Note you'll have to enable some features in Asterisk, so you will need admin access to Asterisk. 
+
 [Get it on the Chrome Web Store](https://chromewebstore.google.com/detail/asterisk-click-to-call/pioibldicnmheenkadiijicefnalndli)
 
 ## Overview
