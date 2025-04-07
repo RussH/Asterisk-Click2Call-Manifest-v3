@@ -1,6 +1,6 @@
 # Asterisk Click To Call (Manifest V3)
 
-This is a Manifest V3 version of a basic Asterisk Click To Call extension. I looked at the defunct Bitree Click2Call extension to see how to build a proper URL. Unlike that one, this extension does not track or record any user behaviour. This extension is for Asterisk using AMI only (Asterisk v12 or higher).
+This is a Manifest V3 version of a basic Asterisk Click To Call extension. I looked at the defunct Bitree Click2Call extension to see how to build a proper URL. Unlike that one, this extension does not track or record any user behaviour. This extension is for Asterisk using ARI only (Asterisk v12 or higher). AJAM and AMI Support is removed.
 
 This extension would generally be used if you are working in an office that already uses an Asterisk PBX and you want to improve your workflow to quickly dial out from your browser. Note you'll have to enable some features in Asterisk, so you will need admin access to Asterisk. 
 
@@ -39,7 +39,7 @@ curl -v -X POST "http://192.168.0.1:8088/ari/channels?endpoint=Local/999@all&ext
 For this extension to work, update your Asterisk configuration as follows:
 
 1. **Asterisk Version**  
-   Ensure you are using **Asterisk version 12 or higher** with AMI support.
+   Ensure you are using **Asterisk version 12 or higher** with ARI support.
 
 2. **ARI Configuration**  
    Add the following entry to your `/etc/asterisk/ari.conf`:
