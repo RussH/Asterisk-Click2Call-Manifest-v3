@@ -41,18 +41,22 @@ For this extension to work, update your Asterisk configuration as follows:
 1. **Asterisk Version**  
    Ensure you are using **Asterisk version 12 or higher** with AMI support.
 
-2. **Manager Configuration**  
-   Add the following entry to your `/etc/asterisk/manager.conf`:
+2. **ARI Configuration**  
+   Add the following entry to your `/etc/asterisk/ari.conf`:
 
    ```ini
-   [clicktocall]
-   secret=clicktocall_secret
-   writetimeout=100
-   read=system,call,log,verbose,command,agent,user,config,originate
-   write=system,call,log,verbose,command,agent,user,config,originate
+   [general]
+   enabled = yes
+   pretty = no
+   allowed_origins = * ; you can lock down permitted sources
    
+   [clicktocall]
+   type = user
+   read_only = no
+   password = clicktocall_secret
+   password_format = plain   ;  crypted or plaintext
    ```
-This username and secret will be what you configure in the chrome extension.
+This username and password will be what you configure in the chrome extension.
 
 ![Extension Configuration](images/options.png)
 
@@ -65,7 +69,9 @@ Enable the mini HTTP server in Asterisk by updating your `http.conf` with the fo
  enabled=yes
  bindaddr=192.168.1.100
  bindport=8088
- ;uploads=/var/lib/asterisk/uploads/blah/
+; Optional: enable TLS/SSL if you use secure HTTPS connections
+; tlsenable=yes
+; tlsbindaddr=0.0.0.0:8089
   ```
 
 ## Installation
