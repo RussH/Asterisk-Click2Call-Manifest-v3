@@ -1,6 +1,6 @@
 {
   "name": "Asterisk Click to Call",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "RussH",
   "manifest_version": 3,
   "default_locale": "en",
@@ -13,7 +13,8 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "contextMenus", "notifications", "storage"],
+  "permissions": ["contextMenus", "notifications", "storage", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
   "action": {
     "default_icon": {
       "16": "phone16.png",
