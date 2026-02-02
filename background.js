@@ -89,3 +89,16 @@ chrome.storage.onChanged.addListener((changes, area) => {
     applyRulesFromStorage();
   }
 });
+
+// Handle messages from content script for tel:/callto: link clicks
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === 'clickToCall' && request.phoneNumber) {
+    console.log('Background: Received clickToCall request for:', request.phoneNumber);
+
+    placeCall(request.phoneNumber);
+
+    sendResponse({ success: true });
+  }
+
+  return true;
+});
