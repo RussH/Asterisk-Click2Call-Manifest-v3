@@ -5,9 +5,7 @@
   <title>Asterisk Click to Call Options</title>
   <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
   <style>
-    .glyphicon {
-      color: #2e6da4;
-    }
+    .glyphicon { color: #2e6da4; }
     fieldset {
       margin: 8px;
       border: 1px solid silver;
@@ -24,6 +22,12 @@
       font-weight: bold;
       display: none;
     }
+    .muted-help {
+      color: #777;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .alert code { background: rgba(0,0,0,0.04); padding: 1px 4px; border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -32,52 +36,85 @@
       <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3>Asterisk Click to Call Options</h3>
+            <h3 style="margin:0;">Asterisk Click to Call Options</h3>
           </div>
+
           <div class="panel-body">
             <form class="form-vertical">
               <!-- Hard-coded ARI; removed options for AMI and AJAM -->
               <input type="hidden" name="interface" value="ari" />
 
-              <div class="form-group col-md-4">
-                <label for="exten">Extension:</label>
-                <input type="text" class="form-control" name="exten" id="exten" placeholder="000" />
+              <!-- Disclosure + toggle for tel:/callto: handling -->
+              <div class="alert alert-info" role="alert" style="margin-bottom:15px;">
+                <strong>Link handling:</strong>
+                When enabled, clicking <code>tel:</code> or <code>callto:</code> links on websites will be redirected to Asterisk Click to Call.
+                This replaces your browser/OS default phone app for those links.
               </div>
 
-              <div class="form-group col-md-8" id="ip-group">
-                <label for="ip">ARI URL:</label>
-                <input type="text" class="form-control" name="ip" id="ip" value="https://127.0.0.1:8088" />
-                <small id="ip-warning" class="warning-text">
-                  ⚠ Warning: Using HTTP is insecure! Sensitive data may be exposed.
-                  <br>
-                  <input type="checkbox" id="allow-http">
-                  <label for="allow-http">I understand the risks and still want to proceed.</label>
-                </small>
+              <div class="checkbox" style="margin-top:0;margin-bottom:15px;">
+                <label>
+                  <input type="checkbox" id="interceptTelLinks">
+                  Intercept <code>tel:</code> / <code>callto:</code> links
+                </label>
+                <div class="muted-help">
+                  Tip: If this is off, your system dialler/softphone will handle those links as normal.
+                </div>
               </div>
 
-              <div class="form-group col-md-4" id="context-group">
-                <label for="context">Context:</label>
-                <input type="text" class="form-control" name="context" id="context" value="all" />
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label for="exten">Extension:</label>
+                  <input type="text" class="form-control" name="exten" id="exten" placeholder="000" autocomplete="off" />
+                  <div class="muted-help">Your phone/endpoint extension (caller ID leg).</div>
+                </div>
+
+                <div class="form-group col-md-8" id="ip-group">
+                  <label for="ip">ARI URL:</label>
+                  <input type="text" class="form-control" name="ip" id="ip" placeholder="https://127.0.0.1:8088" autocomplete="off" />
+                  <div class="muted-help">Example: <code>https://pbx.example.com:8088</code></div>
+
+                  <small id="ip-warning" class="warning-text">
+                    ⚠ Warning: Using HTTP is insecure! Sensitive data may be exposed.
+                    <br>
+                    <input type="checkbox" id="allow-http">
+                    <label for="allow-http" style="font-weight:normal;">I understand the risks and still want to proceed.</label>
+                  </small>
+                </div>
               </div>
 
-              <div class="form-group col-md-6" id="username-group">
-                <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" name="username" />
-              </div>
-              <div class="form-group col-md-6" id="secret-group">
-                <label for="secret">Password:</label>
-                <input type="password" class="form-control" id="secret" name="secret" />
+              <div class="row">
+                <div class="form-group col-md-4" id="context-group">
+                  <label for="context">Context:</label>
+                  <input type="text" class="form-control" name="context" id="context" placeholder="all" autocomplete="off" />
+                  <div class="muted-help">Dialplan context to use for originating calls.</div>
+                </div>
+
+                <div class="form-group col-md-4" id="username-group">
+                  <label for="username">Username:</label>
+                  <input type="text" class="form-control" id="username" name="username" placeholder="ari-user" autocomplete="off" />
+                  <div class="muted-help">ARI username (avoid shared/admin accounts).</div>
+                </div>
+
+                <div class="form-group col-md-4" id="secret-group">
+                  <label for="secret">Password:</label>
+                  <input type="password" class="form-control" id="secret" name="secret" placeholder="••••••••" autocomplete="new-password" />
+                  <div class="muted-help">Stored in browser sync storage.</div>
+                </div>
               </div>
 
               <div id="status" class="small" style="color:red;margin-top:10px;"></div>
 
-              <div class="col-md-12" style="margin-top:10px;">
-                <button id="save" type="button" class="btn btn-primary btn-block" disabled>Save</button>
+              <div class="row" style="margin-top:10px;">
+                <div class="col-md-12">
+                  <button id="save" type="button" class="btn btn-primary btn-block" disabled>Save</button>
+                </div>
               </div>
             </form>
           </div>
+
           <div class="panel-footer">
-            Click to Call on behalf of <a href="https://first-base.co.uk" target="_blank">First Base Employment</a>. v. <span id="version"></span>
+            Click to Call on behalf of <a href="https://first-base.co.uk" target="_blank" rel="noopener">First Base Employment</a>.
+            v. <span id="version"></span>
           </div>
         </div>
       </div>

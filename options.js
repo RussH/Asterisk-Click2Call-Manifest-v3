@@ -1,211 +1,266 @@
 // options.js
 
-function showFlash(message, type) {
-  $("#connstate").html(message);
-  $("#connstate").removeClass("text-success text-danger").addClass(type);
-  $("#connstate").show();
-  setTimeout(() => {
-    $("#connstate").fadeOut("fast");
-  }, 3000);
-}
+(function () {
+  // --- UI helpers -----------------------------------------------------------
 
-// --- Helpers: protocol handling + permissions ------------------------------
+  function showFlash(message, typeClass) {
+    // typeClass: "text-success" or "text-danger" or "text-info"
+    var $status = $("#status");
+    $status
+    .stop(true, true)
+    .removeClass("text-success text-danger text-info")
+    .addClass(typeClass || "")
+    .text(message)
+    .show();
 
-function sanitizeURL(url, allowHttp) {
-  if (!url) return url;
-  if (url.startsWith("http://") && !allowHttp) {
-    return url.replace("http://", "https://");
+    setTimeout(function () {
+      $status.fadeOut("fast");
+    }, 3000);
   }
-  return url;
-}
 
-function originFrom(base) {
-  try {
-    const u = new URL(base);
-    return `${u.protocol}//${u.host}/`; // e.g. https://10.0.0.5:8088/
-  } catch {
-    return null;
+  // --- Helpers: URL normalisation + permissions ----------------------------
+
+  function stripTrailingSlashes(s) {
+    return String(s || "").replace(/\/+$/, "");
   }
-}
 
-// Must be called from a user gesture (Save button click)
-async function requestOriginPermission(ariBase) {
-  try {
-    const origin = originFrom(ariBase);
-    if (!origin) return false;
+  function normalizeAriUrl(raw, allowHttp) {
+    // Accept:
+    //  - https://host:8088
+    //  - http://host:8088 (only if allowHttp)
+    //  - host:8088  (we’ll assume https://)
+    //  - 127.0.0.1  (we’ll assume https://127.0.0.1)
+    var s = $.trim(raw || "");
+    if (!s) return "";
 
-    const has = await chrome.permissions.contains({ origins: [origin] });
-    if (has) return true;
+    // If user pasted a URL with spaces/newlines etc
+    s = s.replace(/\s+/g, "");
 
-    return await chrome.permissions.request({ origins: [origin] });
-  } catch {
-    return false;
+    // If missing scheme, assume https://
+    if (!/^https?:\/\//i.test(s)) {
+      s = "https://" + s;
+    }
+
+    s = stripTrailingSlashes(s);
+
+    // If user entered http:// but hasn’t acknowledged allowHttp, flip to https://
+    if (s.indexOf("http://") === 0 && !allowHttp) {
+      s = s.replace("http://", "https://");
+    }
+
+    // Validate parse
+    try {
+      // eslint-disable-next-line no-new
+      new URL(s);
+    } catch (e) {
+      return "";
+    }
+
+    return s;
   }
-}
 
-// --- Connection check (WebSocket kept as-is, but protocol-aware) -----------
+  function originFrom(ariBase) {
+    // Returns an origin with trailing slash: https://host:port/
+    try {
+      var u = new URL(ariBase);
+      return u.protocol + "//" + u.host + "/";
+    } catch (e) {
+      return null;
+    }
+  }
 
-function checkConnection() {
-  // Use current form values and respect the Allow HTTP checkbox
-  const rawIp = ($("#ip").val() || "http://127.0.0.1:8088").trim();
-  const allowHttp = $("#allow-http").is(":checked");
-  const ip = sanitizeURL(rawIp, allowHttp);
+  // Must be called from a user gesture (Save button click)
+  async function requestOriginPermission(ariBase) {
+    try {
+      var origin = originFrom(ariBase);
+      if (!origin) return false;
 
-  const username = $("#username").val();
-  const secret = $("#secret").val();
-  const exten = $("#exten").val();
+      // permissions.* expects match patterns, e.g. https://host:port/*
+      var pattern = origin + "*";
 
-  if (ip && username && secret) {
+      var has = await chrome.permissions.contains({ origins: [pattern] });
+      if (has) return true;
+
+      return await chrome.permissions.request({ origins: [pattern] });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // --- Connection check (protocol-aware) -----------------------------------
+
+  function checkConnection() {
+    var rawIp = $("#ip").val() || "";
+    var allowHttp = $("#allow-http").is(":checked");
+    var ip = normalizeAriUrl(rawIp, allowHttp);
+
+    var username = $.trim($("#username").val() || "");
+    var secret = $("#secret").val() || "";
+    var exten = $.trim($("#exten").val() || "");
+
+    if (!ip || !username || !secret) return;
+
     // http -> ws, https -> wss
-    const wsBase = ip.replace(/^http/, "ws");
-    const wsUrl =
-    `${wsBase}/ari/events?api_key=${encodeURIComponent(username)}:` +
-    `${encodeURIComponent(secret)}&app=${encodeURIComponent(exten || "")}`;
+    var wsBase = ip.replace(/^http/i, "ws");
+    var wsUrl =
+    wsBase +
+    "/ari/events?api_key=" +
+    encodeURIComponent(username) +
+    ":" +
+    encodeURIComponent(secret) +
+    "&app=" +
+    encodeURIComponent(exten || "");
 
-    const socket = new WebSocket(wsUrl);
+    try {
+      var socket = new WebSocket(wsUrl);
 
-    socket.onopen = () => {
-      showFlash("Connected to ARI successfully!", "text-success");
-      socket.close();
-    };
-    socket.onerror = () => {
-      showFlash("Connection to ARI failed. Check console for details.", "text-danger");
-      console.error("WebSocket connection failed:", wsUrl);
-    };
-  }
-}
+      socket.onopen = function () {
+        showFlash("Connected to ARI successfully!", "text-success");
+        try { socket.close(); } catch (e) {}
+      };
 
-// --- UI validation for HTTP usage ------------------------------------------
-
-function validateIP() {
-  const ipValue = ($("#ip").val() || "").trim();
-  const warning = $("#ip-warning");
-  const checkbox = $("#allow-http");
-  const saveButton = $("#save");
-
-  const httpNonLocal =
-  ipValue.startsWith("http://") &&
-  !ipValue.startsWith("http://127.0.0.1") &&
-  !ipValue.startsWith("http://localhost");
-
-  if (httpNonLocal) {
-    warning.show();
-    if (!checkbox.is(":checked")) {
-      saveButton.prop("disabled", true);
+      socket.onerror = function () {
+        showFlash("Connection to ARI failed. Check URL/credentials.", "text-danger");
+        // Avoid logging secrets; wsUrl contains api_key
+        console.error("WebSocket connection failed (ARI events).");
+      };
+    } catch (e) {
+      showFlash("WebSocket error while testing ARI connection.", "text-danger");
     }
-  } else {
-    warning.hide();
-    saveButton.prop("disabled", false);
-  }
-}
-
-// Enable save button only if the checkbox is ticked for HTTP connections
-$("#allow-http").on("change", function () {
-  validateIP();
-  if ($(this).is(":checked")) {
-    $("#save").prop("disabled", false);
-  }
-});
-
-// --- Save / Restore ---------------------------------------------------------
-
-async function save_options() {
-  const rawIp = ($("#ip").val() || "").trim();
-  const allowHttp = $("#allow-http").is(":checked");
-
-  const settings = {
-    interface: $("input[name=interface]:checked").val(),
-    exten: $("#exten").val(),
-    amiscript: $("#amiscript").val(),
-    // Store the effective URL we’ll actually use (may flip to https://)
-    ip: sanitizeURL(rawIp, allowHttp),
-    username: $("#username").val(),
-    secret: $("#secret").val(),
-    context: $("#context").val(),
-    allowHttp
-  };
-
-  // Tight, per-origin permission (protocol + host + port), prompted on click
-  const granted = await requestOriginPermission(settings.ip);
-  if (!granted) {
-    showFlash("Permission for that server was not granted.", "text-danger");
-    return;
   }
 
-  chrome.storage.sync.set(settings, () => {
-    console.log("Options saved:", settings);
-    $("#save").text("Saved");
-    setTimeout(() => $("#save").text("Save"), 1000);
+  // --- UI validation for HTTP usage ----------------------------------------
 
-    // Re-run the WS check after saving; background will install DNR on change
-    setTimeout(checkConnection, 250);
-  });
-}
+  function validateIP() {
+    var ipValue = $.trim($("#ip").val() || "");
+    var $warning = $("#ip-warning");
+    var $ack = $("#allow-http");
+    var $save = $("#save");
 
-function restore_options() {
-  chrome.storage.sync.get(
-    ["interface", "exten", "amiscript", "ip", "username", "secret", "context", "allowHttp"],
-    (settings) => {
-      $("input[value=ami]").prop("checked", true);
+    // Show warning only for non-local HTTP
+    var httpNonLocal =
+    ipValue.indexOf("http://") === 0 &&
+    ipValue.indexOf("http://127.0.0.1") !== 0 &&
+    ipValue.indexOf("http://localhost") !== 0;
 
-      if (settings.interface) {
-        $(`input[value=${settings.interface}]`).prop("checked", true).trigger("change");
-      }
-      $("#exten").val(settings.exten || "");
-      $("#amiscript").val(settings.amiscript || "");
-      $("#ip").val(settings.ip || "https://127.0.0.1:8088"); // Default to secure
-      $("#username").val(settings.username || "");
-      $("#secret").val(settings.secret || "");
-      $("#context").val(settings.context || "from-internal");
-
-      // Restore HTTP permission checkbox state
-      if (settings.allowHttp) {
-        $("#allow-http").prop("checked", true);
-        $("#save").prop("disabled", false);
-      } else {
-        $("#allow-http").prop("checked", false);
-      }
-
-      validateIP(); // Ensure validation runs on restore
-      console.log("Options restored:", settings);
-    }
-  );
-}
-
-// --- Init -------------------------------------------------------------------
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Show manifest version
-  const manifestData = chrome.runtime.getManifest();
-  const versionElement = document.getElementById("version");
-  if (versionElement && manifestData.version) {
-    versionElement.textContent = manifestData.version;
-  }
-
-  restore_options();
-
-  $('[data-toggle="popover"]').popover({ placement: "top" });
-
-  $("#save").on("click", (e) => {
-    e.preventDefault(); // keep in click handler for permission prompt
-    save_options();
-  });
-
-  $("#ip").on("input", validateIP);
-  validateIP(); // Validate IP on page load
-
-  $("input[name=interface]").on("change", function () {
-    if (this.value === "ami") {
-      $("#amiscript-group").show();
-      $("#ip-group").hide();
-      $("#context-group").hide();
+    if (httpNonLocal) {
+      $warning.show();
+      // Must acknowledge to enable Save
+      $save.prop("disabled", !$ack.is(":checked"));
     } else {
-      $("#amiscript-group").hide();
-      $("#ip-group").show();
-      $("#context-group").show();
+      $warning.hide();
+      $save.prop("disabled", false);
     }
-  });
+  }
 
-  // Keep your existing behavior: quick connection check when creds change
-  $("#username, #secret, #exten").on("change", checkConnection);
-});
+  // --- Save / Restore -------------------------------------------------------
+
+  async function save_options() {
+    // Keep in click handler (user gesture) for permissions.request()
+    var rawIp = $("#ip").val() || "";
+    var allowHttp = $("#allow-http").is(":checked");
+    var effectiveIp = normalizeAriUrl(rawIp, allowHttp);
+
+    if (!effectiveIp) {
+      showFlash("ARI URL looks invalid. Use e.g. https://pbx.example.com:8088", "text-danger");
+      return;
+    }
+
+    var settings = {
+      // Options UI hard-codes ARI via hidden input
+      interface: $("input[name=interface]").val() || "ari",
+
+ exten: $.trim($("#exten").val() || ""),
+ ip: effectiveIp,
+ username: $.trim($("#username").val() || ""),
+ secret: $("#secret").val() || "",
+ context: $.trim($("#context").val() || "all"),
+ allowHttp: allowHttp,
+
+ // User-controlled interception of tel:/callto:
+ interceptTelLinks: $("#interceptTelLinks").is(":checked")
+    };
+
+    // Basic sanity before prompting for permissions
+    if (!settings.username || !settings.secret) {
+      showFlash("Please fill ARI username and password.", "text-danger");
+      return;
+    }
+
+    // Tight, per-origin permission (protocol + host + port), prompted on Save click
+    var granted = await requestOriginPermission(settings.ip);
+    if (!granted) {
+      showFlash("Permission for that ARI server was not granted.", "text-danger");
+      return;
+    }
+
+    chrome.storage.sync.set(settings, function () {
+      if (chrome.runtime.lastError) {
+        showFlash("Failed to save options: " + chrome.runtime.lastError.message, "text-danger");
+        return;
+      }
+
+      // Write back the normalised URL so it doesn’t “look like it reverted”
+      $("#ip").val(settings.ip);
+
+      $("#save").text("Saved");
+      setTimeout(function () { $("#save").text("Save"); }, 1000);
+
+      // Re-run the WS check after saving; background will install DNR on change
+      setTimeout(checkConnection, 250);
+    });
+  }
+
+  function restore_options() {
+    chrome.storage.sync.get(
+      ["interface", "exten", "ip", "username", "secret", "context", "allowHttp", "interceptTelLinks"],
+      function (settings) {
+        $("#exten").val(settings.exten || "");
+        $("#ip").val(settings.ip || "https://127.0.0.1:8088");
+        $("#username").val(settings.username || "");
+        $("#secret").val(settings.secret || "");
+        $("#context").val(settings.context || "all");
+
+        $("#allow-http").prop("checked", settings.allowHttp === true);
+
+        // Default OFF to avoid surprising users
+        $("#interceptTelLinks").prop("checked", settings.interceptTelLinks === true);
+
+        validateIP();
+      }
+    );
+  }
+
+  // --- Init ----------------------------------------------------------------
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show manifest version
+    try {
+      var manifestData = chrome.runtime.getManifest();
+      var versionElement = document.getElementById("version");
+      if (versionElement && manifestData && manifestData.version) {
+        versionElement.textContent = manifestData.version;
+      }
+    } catch (e) {}
+
+    restore_options();
+
+    $("#save").on("click", function (e) {
+      e.preventDefault();
+      save_options();
+    });
+
+    // Validation / state wiring
+    $("#ip").on("input", validateIP);
+    $("#allow-http").on("change", validateIP);
+    validateIP();
+
+    // Quick connection check when creds change
+    $("#username, #secret, #exten, #ip").on("change", function () {
+      var u = $.trim($("#username").val() || "");
+      var p = $("#secret").val() || "";
+      var ip = $.trim($("#ip").val() || "");
+      if (u && p && ip) checkConnection();
+    });
+  });
+})();

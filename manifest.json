@@ -1,10 +1,10 @@
 {
   "name": "Asterisk Click to Call",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "RussH",
   "manifest_version": 3,
   "default_locale": "en",
-  "description": "Click to call – calls any phone number you've highlighted or in tel:/callto: links directly from your browser using Asterisk.",
+  "description": "Click to call – calls any phone number you've highlighted or in tel:/callto: links directly from your browser using Asterisk. Open Source, NEVER shares your call information.",
   "icons": {
     "16": "phone16.png",
     "48": "phone48.png",
@@ -13,14 +13,23 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["contextMenus", "notifications", "storage", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
-  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "permissions": [
+    "contextMenus",
+    "notifications",
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["*://*/*"],
       "js": ["content.js"],
       "run_at": "document_end"
     }
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
   ],
   "action": {
     "default_icon": {
@@ -29,18 +38,6 @@
     },
     "default_title": "Asterisk Click to Call"
   },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "phone16.png",
-        "phone48.png",
-        "phone128.png",
-        "libs/bootstrap.min.css",
-        "libs/jquery-2.0.3.min.js"
-      ],
-      "matches": ["<all_urls>"]
-    }
-  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   },
